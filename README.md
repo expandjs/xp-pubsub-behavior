@@ -1,3 +1,3 @@
-# xp-notifier
+# xp-pubsub-behavior
 
-See the [`documentation page`](http://expandjs.com/elements/xp-notifier) for more information.
+See the [`documentation page`](http://expandjs.com/elements/xp-pubsub-behavior) for more information.
