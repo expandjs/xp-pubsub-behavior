@@ -35,7 +35,7 @@ This behavior is used to add pub/sub capabilities on the context element.
          *
          * @method notify
          * @param {string} type
-         * @param {Object} [detail = {}]
+         * @param {Object} [detail]
          * @param {Function | Object | string} [predicate]
          * @param {*} [thisArg]
          * @returns {Event}
@@ -49,8 +49,11 @@ This behavior is used to add pub/sub capabilities on the context element.
 
             // Vars
             var self        = this._ensure(),
-                event       = new CustomEvent(type, {bubbles: true, detail: XP.assign({firer: self}, detail)}),
-                subscribers = predicate ? XP.filter(self.subscribers, predicate, thisArg) : self.subscribers;
+                subscribers = self.subscribers = self.subscribers || [],
+                event       = new CustomEvent(type, {bubbles: true, detail: XP.assign({firer: self}, detail)});
+
+            // Filtering
+            if (predicate) { subscribers = XP.filter(subscribers, predicate, thisArg); }
 
             // Notifying
             XP.invoke(subscribers, 'dispatchEvent', event);
@@ -66,7 +69,8 @@ This behavior is used to add pub/sub capabilities on the context element.
          * @returns {Element}
          */
         subscribe: function (subscriber) {
-            var self = this._ensure();
+            var self = this;
+            if (!self.subscribers) { self.subscribers = []; }
             if (XP.isElement(subscriber)) { self.append('subscribers', subscriber); }
             return self;
         },
@@ -79,23 +83,9 @@ This behavior is used to add pub/sub capabilities on the context element.
          * @returns {Element}
          */
         unsubscribe: function (subscriber) {
-            var self = this._ensure();
-            if (XP.isElement(subscriber)) { self.pull('subscribers', subscriber); }
-            return self;
-        },
-
-        /*********************************************************************/
-
-        /**
-         * Ensures that the subscription list is initialized.
-         *
-         * @method _ensure
-         * @returns {Element}
-         * @private
-         */
-        _ensure: function () {
             var self = this;
             if (!self.subscribers) { self.subscribers = []; }
+            if (XP.isElement(subscriber)) { self.pull('subscribers', subscriber); }
             return self;
         }
     };
