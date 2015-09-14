@@ -48,7 +48,7 @@ This behavior is used to add pub/sub capabilities on the context element.
             XP.assertArgument(XP.isVoid(predicate) || XP.isPredicate(predicate), 3, 'Function, Object or string');
 
             // Vars
-            var self        = this._ensure(),
+            var self        = this,
                 subscribers = self.subscribers = self.subscribers || [],
                 event       = new CustomEvent(type, {bubbles: true, detail: XP.assign({firer: self}, detail)});
 
